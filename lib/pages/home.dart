@@ -110,7 +110,7 @@ class _JokeListPageState extends State<HomePage> {
                 child: _isLoading
                     ? const Center(
                         child: CircularProgressIndicator(color: Colors.blue))
-                    : _buildJokeList(),
+                    : _buildScrollableJokeList(),
               )
             ],
           ),
@@ -119,8 +119,7 @@ class _JokeListPageState extends State<HomePage> {
     );
   }
 
-
-  Widget _buildJokeList() {
+  Widget _buildScrollableJokeList() {
     if (_jokesRaw.isEmpty) {
       return const Center(
         child: Text(
@@ -129,56 +128,16 @@ class _JokeListPageState extends State<HomePage> {
         ),
       );
     }
-    return ListView.builder(
-      itemCount: _jokesRaw.length,
-      itemBuilder: (context, index) {
-        final jokeJson = _jokesRaw[index];
-        return _cardView.cardView(jokeJson);
-      },
-    );
-  }
-
-  AppBar appBar() {
-    return AppBar(
-      title: const Text(
-        'Joke App',
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-          color: Colors.white,
-          fontSize: 24,
-        ),
+    return Scrollbar(
+      thumbVisibility: true,
+      child: ListView.builder(
+        physics: const BouncingScrollPhysics(),
+        itemCount: _jokesRaw.length,
+        itemBuilder: (context, index) {
+          final jokeJson = _jokesRaw[index];
+          return _cardView.cardView(jokeJson);
+        },
       ),
-      backgroundColor: Colors.teal,
-      centerTitle: true,
-      leading: GestureDetector(
-        onTap: () {},
-        child: Container(
-          margin: const EdgeInsets.all(0),
-          alignment: Alignment.center,
-          child: SvgPicture.asset(
-            'assets/icons/left-arrow.svg',
-            height: 30,
-            width: 30,
-            colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
-          ),
-        ),
-      ),
-      actions: [
-        GestureDetector(
-          onTap: () {},
-          child: Container(
-            margin: const EdgeInsets.all(12),
-            alignment: Alignment.center,
-            width: 30,
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(10)),
-            child: SvgPicture.asset(
-              'assets/icons/dots.svg',
-              colorFilter:
-                  const ColorFilter.mode(Colors.white, BlendMode.srcIn),
-            ),
-          ),
-        ),
-      ],
     );
   }
 }
